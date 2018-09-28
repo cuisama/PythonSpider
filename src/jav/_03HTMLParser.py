@@ -6,20 +6,27 @@ Created on 2018/09/28
 from bs4 import BeautifulSoup
 import re
 
+from jav.Model import Video
+
 
 class HtmlParser(object):
     
     
     def _get_urls(self, url, soup):
-#         soup.find_all("div",class_="video",)
-        return None
+        nodes = soup.find_all("a",href=re.compile("vl_update.php\?&mode=&page=\d+"))
+        urls = []
+        for node in nodes:
+            pass
+            # urls.append("http://www.o23g.com/cn/" + node["href"])
+        return urls
         
     
     def _get_data(self, url, soup):
         nodes = soup.find_all("a",href=re.compile("\.\/\?v=javli\w*"))
         res = []
         for node in nodes:
-            res.append((node["title"], node["href"]))
+            m = Video(node["title"], node["href"])
+            res.append(m)
         return res
     
     
