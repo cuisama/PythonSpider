@@ -3,19 +3,20 @@ Created on 2018/09/28
 
 @author: 8LB11L2
 '''
-
+from jav.Model import Video
 
 class DataOutPuter(object):
     
     def __init__(self):
-        # self.datas = []
         self.datas = set()
 
     def collect_data(self, data):
+        if data is None:
+            return
+        
         for item in data:
-            # self.datas.append(item)
             self.datas.add(item)
-            print(item)
+#             print(item)
         
     def console(self):
         for item in self.datas:
@@ -27,4 +28,10 @@ class DataOutPuter(object):
         for item in self.datas:
             f.write(str(item) + '\n')
         f.close()
+    
+    def db_sqlserver(self):
+        pass
+    
+    def db_sqlite(self):
+        pass
 
