@@ -23,6 +23,10 @@ class HtmlParser(object):
         nodes = soup.find_all("a",href=re.compile("\.\/\?v=javli\w*"))
         for node in nodes:
             urls.append("http://www.o23g.com/cn/" + node["href"][2:])
+            
+        nodes = soup.find_all("a",href=re.compile("vl_star.php?s="))
+        for node in nodes:
+            urls.append("http://www.o23g.com/cn/" + node["href"])
         
         return urls
         
@@ -59,7 +63,7 @@ class HtmlParser(object):
     
     def do(self, html, url):
         if html is None or url is None:
-            return
+            return None, None
         
         soup = BeautifulSoup(html,"html.parser")
         

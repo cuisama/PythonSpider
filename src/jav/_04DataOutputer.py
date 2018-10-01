@@ -3,7 +3,6 @@ Created on 2018/09/28
 
 @author: 8LB11L2
 '''
-from jav.Model import Video
 
 class DataOutPuter(object):
     
