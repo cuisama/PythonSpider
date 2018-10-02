@@ -11,8 +11,8 @@ from jav.Model import Video
 class HtmlParser(object):
     
     def _get_urls(self, url, soup):
-        if re.search("vl_update.php\?&mode=&page=",url) is None:
-            return None
+#         if re.search("vl_update.php\?&mode=&page=",url) is None:
+#             return None
         
         urls = []
 
@@ -24,9 +24,13 @@ class HtmlParser(object):
         for node in nodes:
             urls.append("http://www.o23g.com/cn/" + node["href"][2:])
             
-        nodes = soup.find_all("a",href=re.compile("vl_star.php?s="))
+        nodes = soup.find_all("a",href=re.compile("vl_star.php\?s="))
         for node in nodes:
             urls.append("http://www.o23g.com/cn/" + node["href"])
+        
+        nodes = soup.find_all("a",href=re.compile("vl_star.php\?&mode=&s=\w*?&page=\d+"))
+        for node in nodes:
+            urls.append("http://www.o23g.com" + node["href"])
         
         return urls
         

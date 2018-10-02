@@ -31,7 +31,7 @@ class SpiderMan(object):
                 print('traceback.print_exc():', traceback.print_exc())
 
         print("end")
-        self.outputer.file()
+#         self.outputer.file()
     
 
 

@@ -3,12 +3,22 @@ Created on 2018/09/28
 
 @author: 8LB11L2
 '''
+from os import path
 
 
 class UrlManager(object):
     
     old_urls = set()
     new_urls = set()
+    
+    if path.isfile("urls.txt"):
+        f = open("urls.txt","r")
+        for line in f:
+            line = line[1:-1]
+            urls = line.strip().replace(" ","").replace("'","").split(",")
+        for u in urls:
+            new_urls.add(u)  
+        f.close()
     
     def add_new_url(self, url):
         if url not in self.old_urls:

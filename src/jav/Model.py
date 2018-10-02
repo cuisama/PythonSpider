@@ -1,10 +1,9 @@
 import re
-from peewee import IntegerField, TextField, CharField, SqliteDatabase,\
+from peewee import TextField, CharField, SqliteDatabase,\
     Model
 
 db = SqliteDatabase("jav.db")
 
-c = db.is_closed()
 class Video(Model):
     
 #     id = IntegerField(unique=True,auto=True)    #key
