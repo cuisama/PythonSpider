@@ -5,6 +5,7 @@ Created on 2018/09/28
 '''
 from jav import _01URLManager, _02HTMLDownloader, _03HTMLParser, _04DataOutputer
 import traceback
+from jav.Model import Url
 
 class SpiderMan(object):
     
@@ -29,6 +30,7 @@ class SpiderMan(object):
             except Exception as err:
                 print(err)
                 print('traceback.print_exc():', traceback.print_exc())
+                Url.update(state=2).where(Url.url == new_url)
 
         print("end")
 #         self.outputer.file()

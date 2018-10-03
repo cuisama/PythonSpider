@@ -1,8 +1,15 @@
 import re
 from peewee import TextField, CharField, SqliteDatabase,\
-    Model
+    Model, IntegerField
 
 db = SqliteDatabase("jav.db")
+
+class Url(Model):
+    url = CharField(max_length=100)
+    state = IntegerField(default=0)
+    class Meta:
+        database = db
+        table_name = 'url'
 
 class Video(Model):
     
@@ -60,3 +67,5 @@ tables = db.get_tables()
 if 'video' not in tables:
     db.create_tables([Video,])    
 #     Video.create(title = "_title", url = "_url", number = "_number", date = "_date", length = "_len", director = "_director", maker = "_maker", label = "_label", review = "_review", genres = "_genres", cast = "_cast")
+if 'url' not in tables:
+    db.create_tables([Url,])
