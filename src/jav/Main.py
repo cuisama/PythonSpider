@@ -27,10 +27,11 @@ class SpiderMan(object):
                 #TODO
 #                 if len(self.outputer.datas) > 20:
 #                     break
+                Url.update(state=1).where(Url.url == new_url).execute()
             except Exception as err:
                 print(err)
                 print('traceback.print_exc():', traceback.print_exc())
-                Url.update(state=2).where(Url.url == new_url)
+                Url.update(state=2).where(Url.url == new_url).execute()
 
         print("end")
 #         self.outputer.file()

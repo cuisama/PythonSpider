@@ -7,9 +7,11 @@ from bs4 import BeautifulSoup
 import re
 
 from jav.Model import Video
+from jav.Util import fn_timer
 
 class HtmlParser(object):
     
+    @fn_timer
     def _get_urls(self, url, soup):
 #         if re.search("vl_update.php\?&mode=&page=",url) is None:
 #             return None
@@ -34,7 +36,7 @@ class HtmlParser(object):
         
         return urls
         
-    
+    @fn_timer
     def _get_data(self, url, soup):
         if re.search("\/\?v=javli",url) is None:
             return None
