@@ -40,7 +40,7 @@ class HtmlParser(object):
     def _get_data(self, url, soup):
         if re.search("\/\?v=javli",url) is None:
             return None
-        print(url)
+        
         datas = []
         
         title = soup.find("div", id="video_title").find("a",href=re.compile("\?v=javli\w*")).text
