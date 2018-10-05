@@ -32,8 +32,9 @@ class UrlManager(object):
             
     def add_new_url(self, _url):
         if _url not in self.old_urls:
+            if _url not in self.new_urls:
+                Url.create(url = _url)
             self.new_urls.add(_url)
-            Url.create(url = _url)
     
     def add_new_urls(self, urls):
         if urls is None or len(urls) == 0:
