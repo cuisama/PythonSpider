@@ -6,10 +6,13 @@ Created on 2018/09/28
 from bs4 import BeautifulSoup
 import re
 
-from jav.Model import Video
+from jav.Model import Video, db
 from jav.Util import fn_timer
 
 class HtmlParser(object):
+    
+    def __init__(self, lock):
+        self.lock = lock
     
     @fn_timer
     def _get_urls(self, url, soup):
@@ -36,6 +39,8 @@ class HtmlParser(object):
         
         return urls
         
+    _data = {}
+        
     @fn_timer
     def _get_data(self, url, soup):
         if re.search("\/\?v=javli",url) is None:
@@ -44,6 +49,7 @@ class HtmlParser(object):
         datas = []
         
         title = soup.find("div", id="video_title").find("a",href=re.compile("\?v=javli\w*")).text
+        _img = soup.find("img",id="video_jacket_img")["src"]
         
         video_info = soup.find("div",id="video_info")
         number = video_info.find("div",id="video_id").find("td",class_="text").text
@@ -58,10 +64,23 @@ class HtmlParser(object):
         cast = video_info.find("div",id="video_cast").find_all("a")
 #         m = Video(title, url, number, date, length, director, maker, label, review, genres, cast)
         
-        x = self._format(title, url, number, date, length, director, maker, label, review, genres, cast)
+        x = self._format(title, url, number, date, length, director, maker, label, review, genres, cast, _img)
         m = Video(x)
-#         Video.create(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8],x[9],x[10])
-        Video.create(title = x[0], url = x[1], number = x[2], date = x[3], length = x[4], director = x[5], maker = x[6], label = x[7], review = x[8], genres = x[9], cast = x[10])
+#         Video.create(title = x[0], url = x[1], number = x[2], date = x[3], length = x[4], director = x[5], maker = x[6], label = x[7], review = x[8], genres = x[9], cast = x[10], img = x[11])
+        
+#         self._data.append({"img":img,"url":url})
+        
+        self.lock.acquire()
+        self._data[url] = _img
+        if len(self._data) >= 1:
+            print (len(self._data))
+            with db.atomic():
+                for key in self._data:
+                    print (key,self._data[key])
+                    Video().update(img = self._data[key]).where(Video.url == key, Video.img == None).execute()
+            self._data = {}
+#         Video().update(img = _img).where(Video.url == url, Video.img == None).execute()
+        self.lock.release()
         datas.append(m)   
         
         return datas
@@ -76,11 +95,11 @@ class HtmlParser(object):
         new_urls = self._get_urls(url, soup)
         new_data = self._get_data(url, soup)
         
-        return new_data, new_urls
+        return new_data, None #new_urls
     
     _tag = re.compile("<.*?>")
     
-    def _format(self, title, url, number, date, length, director, maker, label, review, genres, cast):
+    def _format(self, title, url, number, date, length, director, maker, label, review, genres, cast, img):
         _title = title
         _url = url
         _number = number
@@ -92,7 +111,8 @@ class HtmlParser(object):
         _review = review or ""
         _genres = genres and self._tag.sub("",str(genres)) or ""
         _cast = cast and self._tag.sub("",str(cast)) or ""
-        return _title, _url, _number, _date, _length, _director, _maker, _label, _review, _genres, _cast
+        _img = img
+        return _title, _url, _number, _date, _length, _director, _maker, _label, _review, _genres, _cast, _img
     
 
 

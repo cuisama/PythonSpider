@@ -25,6 +25,7 @@ class Video(Model):
     review = CharField(max_length=5)
     genres = TextField()
     cast = TextField()
+    img = TextField()
     class Meta:
         database = db
         table_name = 'video'

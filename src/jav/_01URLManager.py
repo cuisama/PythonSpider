@@ -4,14 +4,16 @@ Created on 2018/09/28
 @author: 8LB11L2
 '''
 # from os import path
-from jav.Model import Url
+from jav.Model import Url, Video
 from jav.Util import tm
-
 
 class UrlManager(object):
     
     old_urls = set()
     new_urls = set()
+    
+    def __init__(self, lock):
+        self.lock = lock
     
 #     从文件读URL
 #     if path.isfile("urls.txt"):
@@ -23,12 +25,14 @@ class UrlManager(object):
 #             new_urls.add(u)
 # #             Url.create(url=u)
 #         f.close()
-    res = Url.select()
+
+#     res = Url.select()
+    res = Video.select(Video.url).where(Video.img == None)
     for u in res :
-        if u.state == 1:
-            old_urls.add(u.url)
-        else: 
-            new_urls.add(u.url)
+#         if u.state == 1:
+#             old_urls.add(u.url)
+#         else: 
+        new_urls.add(u.url)
             
     def add_new_url(self, _url):
         if _url not in self.old_urls:
@@ -48,12 +52,15 @@ class UrlManager(object):
         return len(self.new_urls) > 0
     
     __index = 1 
+#     lock = threading.Lock()
     
-    def get_new_url(self):
-        print("exec %s: %s" % (self.__index, tm()))
+    def get_new_url(self,num):
+#         self.lock.acquire()
+        print("[%s] exec %s: %s" % (num, self.__index, tm()))#threading.currentThread().idents
         self.__index += 1
         url = self.new_urls.pop()
         self.old_urls.add(url)
+#         self.lock.release()
         return url
 
     
