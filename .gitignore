@@ -2,3 +2,5 @@
 *.prefs
 *.db-journal
 .idea/
+src/officeplus/doc/
+src/officeplus/ppt/
