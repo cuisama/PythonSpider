@@ -22,7 +22,7 @@ class HtmlDownloader(object):
         if res.code != 200:
             return None
         data = res.read()
-        with open("doc/"+url[0]+".docx", "wb") as code:     
+        with open(url[0], "wb") as code:     
             code.write(data)
         return None
         

@@ -7,6 +7,8 @@ Created on 2018/10/04
 from officeplus.Model import Url
 from Util.com import tm
 import json
+import os
+import re
 
 
 
@@ -17,10 +19,14 @@ class UrlManager(object):
     
     #init data
     
-    with open("Cats_WORD_.json",'r',encoding='utf-8') as f:
-        data = json.load(f)["Templates"]
-    for doc in data:
-        new_urls.add((doc["Title"],"http://www.officeplus.cn" + doc["Download"]))
+    for filename in ["Cats_ppt_.json","Cats_doc_.json"]:
+        with open(filename,'r',encoding='utf-8') as f:
+            data = json.load(f)["Templates"]
+        for doc in data:
+            file = filename[5:8]+"/"+re.sub('[\/?<|>*":]','',doc["Title"])+"."+filename[5:8]+"x"
+            if not os.path.isfile(file):
+                new_urls.add((file,"http://www.officeplus.cn" + doc["Download"]))
+                    
     
     def __init__(self, lock):
         self.lock = lock
