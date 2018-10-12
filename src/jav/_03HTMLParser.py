@@ -6,7 +6,6 @@ Created on 2018/09/28
 from bs4 import BeautifulSoup
 import re
 
-from jav.Model import Video, db
 from jav.Util import fn_timer
 
 class HtmlParser(object):

@@ -43,8 +43,9 @@ if __name__ == '__main__':
     root_url = "http://www.o23g.com/cn/vl_update.php?&mode=&page="   # "http://www.j20a.com/cn/"
     lock = threading.Lock()
     spider_man = SpiderMan(lock)
-#     TODO
-#     spider_man.urls.add_new_url(root_url)
+    if not spider_man.urls.has_new_url():
+        spider_man.urls.add_new_url(root_url)
+        
     th = []
     for i in range(0,10):
         t = threading.Thread(target=spider_man.crawl, args=(i,))

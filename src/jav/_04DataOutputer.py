@@ -3,7 +3,7 @@ Created on 2018/09/28
 
 @author: 8LB11L2
 '''
-from jav.Model import Video, db, Url
+from jav.Model import Video, db
 
 class DataOutPuter(object):
     
@@ -46,13 +46,21 @@ class DataOutPuter(object):
     def db(self,num = 100):
         if len(self._data) >= num:
             print (len(self._data))
-            with db.atomic():
-                for key in self._data:
-                    print (key,self._data[key])
-                    x = self._data[key]
-#                     Video().update(img = self._data[key]).where(Video.url == key, Video.img == None).execute()
-                    Video.create(title = x[0], url = x[1], number = x[2], date = x[3], length = x[4], director = x[5], maker = x[6], label = x[7], review = x[8], genres = x[9], cast = x[10], img = x[11])
-#                     Url.update(state=1).where(Url.url == x[1]).execute()
+            try:
+                with db.atomic():
+                    for key in self._data:
+                        print (key,self._data[key])
+                        x = self._data[key]
+    #                     Video().update(img = self._data[key]).where(Video.url == key, Video.img == None).execute()
+                        Video.create(title = x[0], url = x[1], number = x[2], date = x[3], length = x[4], director = x[5], maker = x[6], label = x[7], review = x[8], genres = x[9], cast = x[10], img = x[11])
+    #                     Url.update(state=1).where(Url.url == x[1]).execute()
+            except Exception as err:
+                if "UNIQUE constraint failed" in str(err):
+                    print(err)
+                else:
+                    self.lock.release()
+                    raise RuntimeError(err)
+                    
             self._data = {}
 #         Video().update(img = _img).where(Video.url == url, Video.img == None).execute()
     
