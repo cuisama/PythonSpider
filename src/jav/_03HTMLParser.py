@@ -39,14 +39,12 @@ class HtmlParser(object):
         
         return urls
         
-    _data = {}
-        
     @fn_timer
     def _get_data(self, url, soup):
         if re.search("\/\?v=javli",url) is None:
             return None
         
-        datas = []
+        datas = {}
         
         title = soup.find("div", id="video_title").find("a",href=re.compile("\?v=javli\w*")).text
         _img = soup.find("img",id="video_jacket_img")["src"]
@@ -65,25 +63,12 @@ class HtmlParser(object):
 #         m = Video(title, url, number, date, length, director, maker, label, review, genres, cast)
         
         x = self._format(title, url, number, date, length, director, maker, label, review, genres, cast, _img)
-        m = Video(x)
-#         Video.create(title = x[0], url = x[1], number = x[2], date = x[3], length = x[4], director = x[5], maker = x[6], label = x[7], review = x[8], genres = x[9], cast = x[10], img = x[11])
         
-#         self._data.append({"img":img,"url":url})
+        datas[url] = x 
         
-        self.lock.acquire()
-        self._data[url] = _img
-        if len(self._data) >= 1:
-            print (len(self._data))
-            with db.atomic():
-                for key in self._data:
-                    print (key,self._data[key])
-                    Video().update(img = self._data[key]).where(Video.url == key, Video.img == None).execute()
-            self._data = {}
-#         Video().update(img = _img).where(Video.url == url, Video.img == None).execute()
-        self.lock.release()
-        datas.append(m)   
-        
-        return datas
+        return datas #返回一个字典
+    
+    
     
     
     def do(self, html, url):
@@ -95,7 +80,7 @@ class HtmlParser(object):
         new_urls = self._get_urls(url, soup)
         new_data = self._get_data(url, soup)
         
-        return new_data, None #new_urls
+        return new_data, new_urls
     
     _tag = re.compile("<.*?>")
     

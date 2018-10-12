@@ -5,7 +5,7 @@ from peewee import TextField, CharField, SqliteDatabase,\
 db = SqliteDatabase("jav.db")
 
 class Url(Model):
-    url = CharField(max_length=100)
+    url = CharField(unique=True,max_length=100)
     state = IntegerField(default=0)
     class Meta:
         database = db
@@ -15,7 +15,7 @@ class Video(Model):
     
 #     id = IntegerField(unique=True,auto=True)    #key
     title = TextField()
-    url = CharField(max_length=60)
+    url = CharField(unique=True,max_length=60)
     number = CharField(max_length=10)
     date = CharField(max_length=20)
     length = CharField(max_length=5)
